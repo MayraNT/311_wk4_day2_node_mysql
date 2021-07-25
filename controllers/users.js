@@ -12,9 +12,8 @@ const getAllUsers = (req, res) => {
 
 const getUserById = (req, res) => {
   // SELECT USERS WHERE ID = <REQ PARAMS ID>
-  let sql = "QUERY GOES HERE"
-  // WHAT GOES IN THE BRACKETS
-  sql = mysql.format(sql, [])
+  let sql = "select * from ?? where ?? = ?"
+  sql = mysql.format(sql, ["users", "id", req.params.id])
 
   pool.query(sql, (err, rows) => {
     if (err) return handleSQLError(res, err)
