@@ -4,7 +4,10 @@ const { handleSQLError } = require('../sql/error')
 
 const getAllUsers = (req, res) => {
   // SELECT ALL USERS
-  pool.query("SELECT * FROM users", (err, rows) => {
+  let sql = "select ??.*, ??.*, ??.* from ?? join ?? on ??.user_id = ??.id join ?? on ??.user_id = ??.id"
+  sql = mysql.format(sql, ["users", "usersContact", "usersAddress", "users", "usersContact", "usersContact", "users", "usersAddress", "usersAddress", "users"])
+
+  pool.query(sql, (err, rows) => {
     if (err) return handleSQLError(res, err)
     return res.json(rows);
   })
@@ -23,8 +26,8 @@ const getUserById = (req, res) => {
 
 const createUser = (req, res) => {
   // INSERT INTO USERS FIRST AND LAST NAME
-  let sql = "insert into ?? (first_name, last_name) values (?, ?)"
-  sql = mysql.format(sql, ["users", req.body.first_name, req.body.last_name])
+  let sql = "insert into ?? (??, ??) values (?, ?)"
+  sql = mysql.format(sql, ["users", "first_name", "last_name", req.body.first_name, req.body.last_name])
 
   pool.query(sql, (err, results) => {
     if (err) return handleSQLError(res, err)
@@ -34,8 +37,8 @@ const createUser = (req, res) => {
 
 const updateUserById = (req, res) => {
   // UPDATE USERS AND SET FIRST AND LAST NAME WHERE ID = <REQ PARAMS ID>
-  let sql = "update ?? set first_name = ?, last_name = ? where id = ?"
-  sql = mysql.format(sql, ["users", req.body.first_name, req.body.last_name, req.params.id])
+  let sql = "update ?? set ?? = ?, ?? = ? where ?? = ?"
+  sql = mysql.format(sql, ["users", "first_name", req.body.first_name, "last_name", req.body.last_name, "id", req.params.id])
 
   pool.query(sql, (err, results) => {
     if (err) return handleSQLError(res, err)
@@ -45,8 +48,8 @@ const updateUserById = (req, res) => {
 
 const deleteUserByFirstName = (req, res) => {
   // DELETE FROM USERS WHERE FIRST NAME = <REQ PARAMS FIRST_NAME>
-  let sql = "delete from ?? where first_name = ?"
-  sql = mysql.format(sql, ["users", req.params.first_name])
+  let sql = "delete from ?? where ?? = ?"
+  sql = mysql.format(sql, ["users", "first_name", req.params.first_name])
 
   pool.query(sql, (err, results) => {
     if (err) return handleSQLError(res, err)
